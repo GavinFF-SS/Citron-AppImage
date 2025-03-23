@@ -26,7 +26,7 @@ jobs:
           - runs-on: ubuntu-latest
             name: "Citron build (Steam Deck)"
             optimized: false
-            arch: x86_64
+            arch: znver2
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
       - uses: actions/checkout@v4
