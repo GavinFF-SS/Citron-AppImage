@@ -25,7 +25,7 @@ jobs:
             arch: x86_64
           - runs-on: ubuntu-latest
             name: "Citron build (Steam Deck)"
-            optimized: false
+            optimized: deck
             arch: znver2
 
     container: ghcr.io/pkgforge-dev/archlinux:latest
@@ -55,7 +55,7 @@ jobs:
           mv *.AppImage* dist/      
 
       - name: Compile Citron (Steam Deck)
-        if: ${{ matrix.optimized == false }}
+        if: ${{ matrix.optimized == deck }}
         run: |
           rm -rf ./AppDir || true
           sudo pacman -R --noconfirm citron || true
@@ -66,7 +66,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4.6.1
         with:
-          name: citron-${{ matrix.optimized && 'optimized' || 'normal' }}-appimage-${{ matrix.arch }}
+          name: citron-${{ matrix.optimized && 'optimized' || 'normal' || 'deck' }}-appimage-${{ matrix.arch }}
           path: "dist"
 
       - name: Check version file
