@@ -33,8 +33,6 @@ jobs:
       - name: Compile Citron (Steam Deck)
         if: ${{ matrix.optimized == false }}
         run: |
-          rm -rf ./AppDir || true
-          sudo pacman -R --noconfirm citron || true
           chmod +x ./citron-appimage.sh && ./citron-appimage.sh
           mkdir -p dist
           mv *.AppImage* dist/
