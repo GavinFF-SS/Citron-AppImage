@@ -19,8 +19,8 @@ if [ "$ARCH" = 'x86_64' ]; then
 		ARCH_FLAGS="-march=x86-64 -mtune=generic -O3"
 	fi
 else
-    echo "Making znver2 (Steam Deck) build of citron"
-	ARCH_FLAGS="-march=znver2 -mtune=znver2"
+	echo "Making aarch64 build of citron"
+	ARCH_FLAGS="-march=armv8-a -mtune=generic -O3"
 fi
 
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
@@ -49,8 +49,7 @@ fi
 	#Replaces 'boost::asio::io_service' with 'boost::asio::io_context' for compatibility with Boost.ASIO versions 1.74.0 and later
 	find src -type f -name '*.cpp' -exec sed -i 's/boost::asio::io_service/boost::asio::io_context/g' {} \;
 
-if [ "$ARCH" = 'x86_64' ]; then
-    mkdir build
+	mkdir build
 	cd build
 	cmake .. -GNinja \
 		-DCITRON_USE_BUNDLED_VCPKG=OFF \
@@ -77,24 +76,6 @@ if [ "$ARCH" = 'x86_64' ]; then
 	ninja
 	sudo ninja install
 	echo "$VERSION" >~/version
-else
-    mkdir build && cd build
-    cmake .. -GNinja \
-        -DCITRON_ENABLE_LTO=ON \
-        -DCITRON_USE_BUNDLED_VCPKG=ON \
-        -DCITRON_TESTS=OFF \
-        -DCITRON_USE_LLVM_DEMANGLE=OFF \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error" \
-        -DCMAKE_C_FLAGS="$ARCH_FLAGS" \
-        -DUSE_DISCORD_PRESENCE=OFF \
-        -DBUNDLE_SPEEX=ON \
-        -DCMAKE_SYSTEM_PROCESSOR=x86_64 \
-        -DCMAKE_BUILD_TYPE=Release
-    ninja
-    sudo ninja install
-    echo "$VERSION" >~/version
-fi
 )
 rm -rf ./citron
 VERSION="$(cat ~/version)"
@@ -140,6 +121,10 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/alsa-lib/*
 
 # Prepare sharun
+if [ "$ARCH" = 'aarch64' ]; then
+	# allow the host vulkan to be used for aarch64 given the sed situation
+	echo 'SHARUN_ALLOW_SYS_VKICD=1' > ./.env
+fi
 ln ./sharun ./AppRun
 ./sharun -g
 
