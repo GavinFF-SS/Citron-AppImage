@@ -25,9 +25,8 @@ jobs:
             arch: x86_64
           - runs-on: ubuntu-latest
             name: "Citron build (Steam Deck)"
-            optimized: deck
+            optimized: false
             arch: znver2
-
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
       - uses: actions/checkout@v4
@@ -51,15 +50,6 @@ jobs:
           rm -rf ./AppDir || true
           sudo pacman -R --noconfirm citron || true
           chmod +x ./citron-appimage.sh && ./citron-appimage.sh v3
-          mkdir -p dist
-          mv *.AppImage* dist/      
-
-      - name: Compile Citron (Steam Deck)
-        if: ${{ matrix.optimized = deck }}
-        run: |
-          rm -rf ./AppDir || true
-          sudo pacman -R --noconfirm citron || true
-          chmod +x ./citron-appimage.sh && ./citron-appimage.sh
           mkdir -p dist
           mv *.AppImage* dist/
 
