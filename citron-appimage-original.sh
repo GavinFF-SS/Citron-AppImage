@@ -9,9 +9,19 @@ REPO="https://git.citron-emu.org/Citron/Citron.git"
 LIB4BN="https://raw.githubusercontent.com/VHSgunzo/sharun/refs/heads/main/lib4bin"
 URUNTIME="https://github.com/VHSgunzo/uruntime/releases/latest/download/uruntime-appimage-dwarfs-$ARCH"
 
-echo "Making Steam Deck build of citron"
-ARCH_FLAGS="-march=znver2 -mtune=znver2"
-
+if [ "$ARCH" = 'x86_64' ]; then
+	if [ "$1" = 'v3' ]; then
+		echo "Making x86-64-v3 optimized build of citron"
+		ARCH="${ARCH}_v3"
+		ARCH_FLAGS="-march=x86-64-v3 -O3"
+	else
+		echo "Making x86-64 generic build of citron"
+		ARCH_FLAGS="-march=x86-64 -mtune=generic -O3"
+	fi
+else
+	echo "Making aarch64 build of citron"
+	ARCH_FLAGS="-march=armv8-a -mtune=generic -O3"
+fi
 
 UPINFO="gh-releases-zsync|$(echo "$GITHUB_REPOSITORY" | tr '/' '|')|latest|*$ARCH.AppImage.zsync"
 
@@ -42,18 +52,28 @@ fi
 	mkdir build
 	cd build
 	cmake .. -GNinja \
-      -DCITRON_ENABLE_LTO=ON \
-      -DCITRON_USE_BUNDLED_VCPKG=ON \
-      -DCITRON_TESTS=OFF \
-      -DCITRON_USE_LLVM_DEMANGLE=OFF \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error" \
-      -DCMAKE_C_FLAGS="$ARCH_FLAGS" \
-      -DUSE_DISCORD_PRESENCE=OFF \
-      -DBUNDLE_SPEEX=ON \
-      -DCMAKE_SYSTEM_PROCESSOR=$(uname -m) \
-      -DCMAKE_BUILD_TYPE=Release
-    ninja
+		-DCITRON_USE_BUNDLED_VCPKG=OFF \
+		-DCITRON_USE_BUNDLED_QT=OFF \
+		-DUSE_SYSTEM_QT=ON \
+		-DCITRON_USE_BUNDLED_FFMPEG=OFF \
+		-DCITRON_USE_BUNDLED_SDL2=ON \
+		-DCITRON_USE_EXTERNAL_SDL2=OFF \
+		-DCITRON_TESTS=OFF \
+		-DCITRON_CHECK_SUBMODULES=OFF \
+		-DCITRON_USE_LLVM_DEMANGLE=OFF \
+		-DCITRON_ENABLE_LTO=ON \
+		-DCITRON_USE_QT_MULTIMEDIA=ON \
+		-DCITRON_USE_QT_WEB_ENGINE=OFF \
+		-DENABLE_QT_TRANSLATION=ON \
+		-DUSE_DISCORD_PRESENCE=OFF \
+		-DBUNDLE_SPEEX=ON \
+		-DCITRON_USE_FASTER_LD=OFF \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_CXX_FLAGS="$ARCH_FLAGS -Wno-error" \
+		-DCMAKE_C_FLAGS="$ARCH_FLAGS" \
+		-DCMAKE_SYSTEM_PROCESSOR="$(uname -m)" \
+		-DCMAKE_BUILD_TYPE=Release
+	ninja
 	sudo ninja install
 	echo "$VERSION" >~/version
 )
@@ -101,6 +121,10 @@ xvfb-run -a -- ./lib4bin -p -v -e -s -k \
 	/usr/lib/alsa-lib/*
 
 # Prepare sharun
+if [ "$ARCH" = 'aarch64' ]; then
+	# allow the host vulkan to be used for aarch64 given the sed situation
+	echo 'SHARUN_ALLOW_SYS_VKICD=1' > ./.env
+fi
 ln ./sharun ./AppRun
 ./sharun -g
 

@@ -16,17 +16,9 @@ jobs:
       matrix:
         include:
           - runs-on: ubuntu-latest
+            name: "Citron Build (Steam Deck)"
             optimized: false
-            name: "Citron build (Normal)"
             arch: x86_64
-          - runs-on: ubuntu-latest
-            optimized: true
-            name: "Citron Build (Optimized)"
-            arch: x86_64
-          - runs-on: ubuntu-24.04-arm
-            name: "Citron Build (Normal)"
-            optimized: false
-            arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
       - uses: actions/checkout@v4
@@ -37,19 +29,10 @@ jobs:
         if: always()
         run: chmod +x ./get-dependencies.sh && ./get-dependencies.sh
 
-      - name: Compile Citron (Normal)
+      - name: Compile Citron (Steam Deck)
         if: ${{ matrix.optimized == false }}
         run: |
           chmod +x ./citron-appimage.sh && DEVEL=true ./citron-appimage.sh
-          mkdir -p dist
-          mv *.AppImage* dist/
-
-      - name: Compile Citron (Optimized)
-        if: ${{ matrix.optimized == true }}
-        run: |
-          rm -rf ./AppDir || true
-          sudo pacman -R --noconfirm citron || true
-          chmod +x ./citron-appimage.sh && DEVEL=true ./citron-appimage.sh v3
           mkdir -p dist
           mv *.AppImage* dist/
 
@@ -83,15 +66,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4.1.9
         with:
-          name: citron-optimized-appimage-x86_64
-
-      - uses: actions/download-artifact@v4.1.9
-        with:
-          name: citron-normal-appimage-x86_64
-
-      - uses: actions/download-artifact@v4.1.9
-        with:
-          name: citron-normal-appimage-aarch64
+          name: citron-normal-appimage-znver2
 
       - uses: actions/download-artifact@v4.1.9
         with:
