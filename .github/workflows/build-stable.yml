@@ -23,10 +23,10 @@ jobs:
             optimized: true
             name: "Citron Build (Optimized)"
             arch: x86_64
-          - runs-on: ubuntu-latest
-            name: "Citron build (Steam Deck)"
+          - runs-on: ubuntu-24.04-arm
+            name: "Citron build (Normal)"
             optimized: false
-            arch: x86_64
+            arch: aarch64
     container: ghcr.io/pkgforge-dev/archlinux:latest
     steps:
       - uses: actions/checkout@v4
@@ -91,7 +91,7 @@ jobs:
 
       - uses: actions/download-artifact@v4.1.9
         with:
-          name: citron-normal-appimage-znver2
+          name: citron-normal-appimage-aarch64
 
       - uses: actions/download-artifact@v4.1.9
         with:
