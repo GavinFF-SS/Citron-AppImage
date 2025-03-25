@@ -30,6 +30,7 @@ pacman -Syu --noconfirm \
 	enet \
 	ffmpeg \
 	ffmpeg4.4 \
+ 	fuse2 \
 	fmt \
 	gamemode \
 	gcc13 \
@@ -48,6 +49,7 @@ pacman -Syu --noconfirm \
 	libxkbcommon-x11 \
 	libxss \
 	libzip \
+ 	lz4 \
 	mbedtls \
 	mbedtls2 \
 	mesa \
@@ -56,17 +58,25 @@ pacman -Syu --noconfirm \
 	ninja \
 	nlohmann-json \
 	numactl \
+ 	openssl \
+  	opus \
 	patchelf \
 	pipewire-audio \
 	pulseaudio \
 	pulseaudio-alsa \
 	python-pip \
+ 	qt5 \
 	qt6-base \
+ 	qt6-svg \
+  	qt6-declarative \
+   	qt6-webengine \
 	qt6ct \
 	qt6-multimedia \
 	qt6-tools \
 	qt6-wayland \
+ 	rapidjson \
 	sdl2 \
+ 	sdl3 \
 	strace \
 	svt-av1 \
 	unzip \
@@ -81,7 +91,8 @@ pacman -Syu --noconfirm \
 	xcb-util-wm \
 	xorg-server-xvfb \
 	zip \
- 	sdl3 \
+ 	zlib \
+  	zstd \
 	zsync
 
 if [ "$(uname -m)" = 'x86_64' ]; then
