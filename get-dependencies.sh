@@ -15,85 +15,9 @@ LIBXML_URL="https://github.com/pkgforge-dev/llvm-libs-debloated/releases/downloa
 
 echo "Installing build dependencies..."
 echo "---------------------------------------------------------------"
-pacman -Syu --noconfirm \
-	aom \
-	base-devel \
-	boost \
-	boost-libs \
-	catch2 \
-	clang \
-	cmake \
-	curl \
-	dav1d \
-	desktop-file-utils \
-	doxygen \
-	enet \
-	ffmpeg \
-	ffmpeg4.4 \
- 	fuse2 \
-	fmt \
-	gamemode \
-	gcc13 \
-	git \
-	glslang \
-	glu \
-	haskell-gnutls \
-	hidapi \
-	libass \
-	libdecor \
-	libfdk-aac \
-	libopusenc \
-	libva \
-	libvpx \
-	libxi \
-	libxkbcommon-x11 \
-	libxss \
-	libzip \
- 	lz4 \
-	mbedtls \
-	mbedtls2 \
-	mesa \
-	meson \
-	nasm \
-	ninja \
-	nlohmann-json \
-	numactl \
- 	openssl \
-  	opus \
-	patchelf \
-	pipewire-audio \
-	pulseaudio \
-	pulseaudio-alsa \
-	python-pip \
- 	qt5 \
-	qt6-base \
- 	qt6-svg \
-  	qt6-declarative \
-   	qt6-webengine \
-	qt6ct \
-	qt6-multimedia \
-	qt6-tools \
-	qt6-wayland \
- 	rapidjson \
-	sdl2 \
- 	sdl3 \
-	strace \
-	svt-av1 \
-	unzip \
-	vulkan-headers \
-	vulkan-nouveau \
-	vulkan-radeon \
-	wget \
-	x264 \
-	x265 \
-	xcb-util-image \
-	xcb-util-renderutil \
-	xcb-util-wm \
-	xorg-server-xvfb \
-	zip \
- 	zlib \
-  	zstd \
-	zsync
+pacman -Syu --needed --noconfirm base-devel boost catch2 cmake ffmpeg fmt git glslang libzip lz4 \
+    mbedtls ninja nlohmann-json openssl opus qt5 sdl2 zlib zstd zip unzip qt6-base qt6-tools qt6-svg \
+    qt6-declarative qt6-webengine sdl3 qt6-multimedia clang qt6-wayland fuse2 rapidjson wget sdl3
 
 if [ "$(uname -m)" = 'x86_64' ]; then
 	pacman -Syu --noconfirm vulkan-intel
