@@ -81,6 +81,7 @@ pacman -Syu --noconfirm \
 	xcb-util-wm \
 	xorg-server-xvfb \
 	zip \
+ 	sdl3 \
 	zsync
 
 if [ "$(uname -m)" = 'x86_64' ]; then
